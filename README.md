@@ -5,9 +5,10 @@
 Create a VM.
 
 ```shell
-virsh create vm.xml
+# Replace the path in vm.xml with an absolute one and create the VM.
+sed "s|\$IMAGES|$(pwd)/images|g" vm.xml | virsh create /dev/stdin
 
-Domain 'vm' created from vm.xml
+Domain 'vm' created from /dev/stdin
 ```
 
 ```shell

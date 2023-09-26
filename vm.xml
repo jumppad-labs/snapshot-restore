@@ -19,7 +19,7 @@
     <emulator>/usr/bin/qemu-system-x86_64</emulator>
     <disk type='file' device='disk'>
       <driver name='qemu' type='qcow2'/>
-      <source file='/home/erik/code/jumppad/vm/docker/custom.qcow2'/>
+      <source file='$IMAGES/custom.qcow2'/>
       <backingStore/>
       <target dev='hda' bus='ide'/>
       <address type='drive' controller='0' bus='0' target='0' unit='0'/>
