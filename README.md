@@ -6,7 +6,9 @@ Create a VM.
 
 ```shell
 # Replace the path in vm.xml with an absolute one and create the VM.
-sed "s|\$IMAGES|$(pwd)/images|g" vm.xml | virsh create /dev/stdin
+sed "s|\$IMAGES|$(pwd)/images|g" vm.xml | \
+sed "s|\$QEMU|$(which qemu-system-x86_64)|g" | \
+virsh create /dev/stdin
 
 Domain 'vm' created from /dev/stdin
 ```
@@ -59,8 +61,10 @@ virsh list --all
 Connect to the VM.
 
 ```shell
-virt-viewer
+virsh console vm
 ```
+
+Disconnect from the VM with `ctrl + 5` (macOS).
 
 Cleanup.
 
