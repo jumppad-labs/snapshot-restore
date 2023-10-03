@@ -62,6 +62,10 @@ Connect to the VM.
 
 ```shell
 virsh console vm
+
+#OR
+
+docker run -ti -e NOVNC_PORT="8080" -e VNC_SERVER_PORT="5900" -e VNC_SERVER_IP="host.containers.internal" -p 8080:8080 voiselle/novnc
 ```
 
 Disconnect from the VM with `ctrl + 5` (macOS).
@@ -129,6 +133,46 @@ cp -R $PWD/checkpoints/first /var/lib/docker/containers/$(docker ps -aq --no-tru
 docker start --checkpoint first ubuntu
 
 docker exec -ti ubuntu tmux a
+```
+
+The state is exactly the same as we left it before the checkpoint/restore.
+
+## Podman
+
+> NOTE: For some reason networking doesnt work after restore, so that still needs to be figured out.
+
+Create snapshot:
+
+```shell
+podman run -di --name ubuntu ubuntu
+
+podman exec -ti ubuntu bash
+# -> apt update && apt install -y tmux vim
+# -> tmux
+# -> tmux set -g status off
+# -> vim
+# -> type something in buffer
+# -> detach tmux (ctrl+b d)
+# -> exit container (ctrl + d)
+
+mkdir -p $PWD/checkpoints
+sudo podman container checkpoint --export $PWD/checkpoints/first.tar.gz ubuntu
+```
+
+Check.
+
+```shell
+podman ps
+
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+```
+
+Restore snapshot:
+
+```shell
+sudo podman container restore --import $PWD/checkpoints/first.tar.gz
+
+podman exec -ti ubuntu tmux a
 ```
 
 The state is exactly the same as we left it before the checkpoint/restore.
